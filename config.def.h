@@ -44,7 +44,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -57,29 +57,35 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "alacritty", NULL };
 
+#include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY|ShiftMask,		XK_Escape, spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Close Xorg?\")\" = Yes ] && killall Xorg") },
+	{ MODKEY|ShiftMask,		XK_BackSpace,	spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Reboot computer?\")\" = Yes ] && sudo -A reboot") },
+	{ MODKEY,			XK_q,	   killclient,	   {0} },
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,  		        XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,			XK_w,	   spawn,	   SHCMD("$BROWSER") },
+	{ MODKEY,			XK_r,	   spawn,	   SHCMD("$TERMINAL -e ranger") },
+	{ MODKEY,			XK_a,	   spawn,	   SHCMD("$TERMINAL -e pulsemixer ; pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY,			XK_x,	   spawn,	   SHCMD("betterlockscreen -s") },
+	{ MODKEY|ShiftMask,		XK_x,	   spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Shutdown computer?\")\" = Yes ] && sudo -A shutdown -h now") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_o,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	{ MODKEY,                       XK_space,  zoom, 	   {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
@@ -93,7 +99,36 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ ShiftMask,			XK_Print,  spawn,	   SHCMD("maimpick") },
+	{ MODKEY,			XK_F1,	   spawn,	   SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -") },
+	{ MODKEY,			XK_F2,	   quit,	   {0} },
+	{ MODKEY,			XK_F3,	   spawn,	   SHCMD("displayselect") },
+	{ MODKEY,			XK_F4,	   spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Hibernate computer?\")\" = Yes ] && sudo -A zzz") },
+	{ MODKEY,			XK_F9,	   spawn,	   SHCMD("dmenumount") },
+	{ MODKEY,			XK_F10,	   spawn,	   SHCMD("dmenuumount") },
+	{ MODKEY,			XK_F11,	   spawn,	   SHCMD("xbacklight -dec 2") },
+	{ MODKEY,			XK_F12,	   spawn,	   SHCMD("xbacklight -inc 2") },
+	{ 0, 				XF86XK_AudioMute, spawn,   SHCMD("pactl set-sink-mute 0 toggle ; pkill -RTMIN+10 dwmblocks") },
+	{ 0, XF86XK_AudioRaiseVolume,	spawn,		           SHCMD("pactl set-sink-volume 0 +5% ; pkill -RTMIN+10 dwmblocks") },
+	{ 0, XF86XK_AudioLowerVolume,	spawn,		           SHCMD("pactl set-sink-volume 0 -5% ; pkill -RTMIN+10 dwmblocks") },
+	{ 0, XF86XK_AudioPrev,		spawn,	                   SHCMD("playerctl previous") },
+	{ 0, XF86XK_AudioNext,		spawn,		           SHCMD("playerctl next") },
+	{ 0, XF86XK_AudioPause,		spawn,		           SHCMD("playerctl pause") },
+	{ 0, XF86XK_AudioPlay,		spawn,		           SHCMD("playerctl play") },
+	{ 0, XF86XK_AudioStop,		spawn,		           SHCMD("playerctl stop") },
+	{ 0, XF86XK_Launch1,		spawn,		           SHCMD("xset dpms force off") },
+	{ 0, XF86XK_TouchpadToggle,	spawn,		           SHCMD("(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1") },
+	{ 0, XF86XK_TouchpadOff,	spawn,		           SHCMD("synclient TouchpadOff=1") },
+	{ 0, XF86XK_TouchpadOn,		spawn,		           SHCMD("synclient TouchpadOff=0") },
+	{ 0, XF86XK_MonBrightnessDown,	spawn,		           SHCMD("xbacklight -dec 2") },
+	{ 0, XF86XK_MonBrightnessUp,	spawn,	                   SHCMD("xbacklight -inc 2") },
+	{ 0, XF86XK_PowerOff,		spawn,                     SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Shutdown computer?\")\" = Yes ] && sudo -A shutdown -h now") },
+	{ 0, XF86XK_Calculator,		spawn,		           SHCMD("$TERMINAL -e bc -l") },
+	{ 0, XF86XK_Sleep,		spawn,		           SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Hibernate computer?\")\" = Yes ] && sudo -A zzz") },
+	{ 0, XF86XK_WWW,		spawn,		           SHCMD("$BROWSER") },
+	{ 0, XF86XK_DOS,		spawn,		           SHCMD("$TERMINAL") },
 };
 
 /* button definitions */
