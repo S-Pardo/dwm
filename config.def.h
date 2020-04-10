@@ -20,7 +20,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "🖥", "🌎", "💲", "👽", "🧠", "🦄", "🌀", "📦", "🎅" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -30,6 +30,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "KeePass2", NULL,	  NULL,	      1 <<8,	    1,           -1 },
 };
 
 /* layout(s) */
@@ -57,7 +58,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-c", "-l", lineas,"-fn", dmenufont, "-nb", "#2e2e2e", "-nf", "#FFFFFF", "-sb", "#49FF49", "-sf", "#1e1e1e", NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
 
 #include <X11/XF86keysym.h>
@@ -65,39 +66,37 @@ static const char *termcmd[]  = { "alacritty", NULL };
 #include "movestack.c"
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY|ShiftMask,		XK_Escape, spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Close Xorg?\")\" = Yes ] && killall Xorg") },
-	{ MODKEY|ShiftMask,		XK_BackSpace,	spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Reboot computer?\")\" = Yes ] && sudo -A reboot") },
-	{ MODKEY,			XK_q,	   killclient,	   {0} },
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,  		        XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,			XK_q,	   killclient,	   {0} },
 	{ MODKEY,			XK_w,	   spawn,	   SHCMD("$BROWSER") },
+	{ MODKEY|ShiftMask,		XK_w,	   spawn,	   SHCMD("$TERMINAL -e sudo nmtui") },
 	{ MODKEY,			XK_r,	   spawn,	   SHCMD("$TERMINAL -e ranger") },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_o,      incnmaster,     {.i = -1 } },
 	{ MODKEY,			XK_a,	   spawn,	   SHCMD("$TERMINAL -e pulsemixer ; pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_z,      setgaps,        {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_z,      setgaps,        {.i = +1 } },
 	{ MODKEY,			XK_x,	   spawn,	   SHCMD("betterlockscreen -s") },
 	{ MODKEY|ShiftMask,		XK_x,	   spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Shutdown computer?\")\" = Yes ] && sudo -A shutdown -h now") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_o,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,		XK_m,      spawn,          SHCMD("amixer sset Master toggle ; pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_space,  zoom, 	   {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_z,      setgaps,        {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_z,      setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 	{ MODKEY,                       XK_Left,   shiftview,      {.i = -1 } },
 	{ MODKEY,                       XK_Right,  shiftview,      {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
@@ -110,8 +109,9 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      setgaps,        {.i = 0  } },
 	{ ShiftMask,			XK_Print,  spawn,	   SHCMD("maimpick") },
+	{ MODKEY,			XK_Insert, spawn,          SHCMD("notify-send \"📋 Clipboard contents:\" \"$(xclip -o -selection clipboard)\"") },
 	{ MODKEY,			XK_F1,	   spawn,	   SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -") },
 	{ MODKEY,			XK_F2,	   quit,	   {0} },
 	{ MODKEY,			XK_F3,	   spawn,	   SHCMD("displayselect") },
@@ -120,13 +120,15 @@ static Key keys[] = {
 	{ MODKEY,			XK_F10,	   spawn,	   SHCMD("dmenuumount") },
 	{ MODKEY,			XK_F11,	   spawn,	   SHCMD("xbacklight -dec 2") },
 	{ MODKEY,			XK_F12,	   spawn,	   SHCMD("xbacklight -inc 2") },
-	{ 0, 				XF86XK_AudioMute, spawn,   SHCMD("pactl set-sink-mute 0 toggle ; pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY|ShiftMask,		XK_Escape, spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Close Xorg?\")\" = Yes ] && killall Xorg") },
+	{ MODKEY|ShiftMask,		XK_BackSpace,	spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Reboot computer?\")\" = Yes ] && sudo -A reboot") },
+	{ 0, XF86XK_AudioMute,          spawn,                     SHCMD("pactl set-sink-mute 0 toggle ; pkill -RTMIN+10 dwmblocks") },
 	{ 0, XF86XK_AudioRaiseVolume,	spawn,		           SHCMD("pactl set-sink-volume 0 +5% ; pkill -RTMIN+10 dwmblocks") },
 	{ 0, XF86XK_AudioLowerVolume,	spawn,		           SHCMD("pactl set-sink-volume 0 -5% ; pkill -RTMIN+10 dwmblocks") },
 	{ 0, XF86XK_AudioPrev,		spawn,	                   SHCMD("playerctl previous") },
 	{ 0, XF86XK_AudioNext,		spawn,		           SHCMD("playerctl next") },
 	{ 0, XF86XK_AudioPause,		spawn,		           SHCMD("playerctl pause") },
-	{ 0, XF86XK_AudioPlay,		spawn,		           SHCMD("playerctl play") },
+	{ 0, XF86XK_AudioPlay,		spawn,		           SHCMD("playerctl play-pause") },
 	{ 0, XF86XK_AudioStop,		spawn,		           SHCMD("playerctl stop") },
 	{ 0, XF86XK_Launch1,		spawn,		           SHCMD("xset dpms force off") },
 	{ 0, XF86XK_TouchpadToggle,	spawn,		           SHCMD("(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1") },
