@@ -10,8 +10,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10", "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "monospace:size=13", "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
+static const char dmenufont[]       = "monospace:size=13";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -35,6 +35,7 @@ static const Rule rules[] = {
 	{ "KeePass2", NULL,	  NULL,	      1 <<8,	    1,           -1 },
 	{ "Spotify",  NULL,	  NULL,	      1 <<8,	    0,           -1 },
 	{ "firefox",  NULL,	  NULL,	      1 <<1,	    0,           -1 },
+	{ NULL,       NULL,  "pulsemixer",    0,	    1,           -1 },
 };
 
 /* layout(s) */
@@ -120,6 +121,8 @@ static Key keys[] = {
 	{ MODKEY,			XK_F2,	   quit,	   {0} },
 	{ MODKEY,			XK_F3,	   spawn,	   SHCMD("displayselect") },
 	{ MODKEY,			XK_F4,	   spawn,	   SHCMD("[ \"$(printf \"No\\nYes\" | dmenu -i -nb darkred -sb red -sf white -nf gray -p \"Hibernate computer?\")\" = Yes ] && sudo -A zzz") },
+	{ MODKEY,			XK_F5,	   spawn,	   SHCMD("redshift -P -O 6500") },
+	{ MODKEY,			XK_F6,	   spawn,	   SHCMD("redshift -P -O 4500") },
 	{ MODKEY,			XK_F9,	   spawn,	   SHCMD("dmenumount") },
 	{ MODKEY,			XK_F10,	   spawn,	   SHCMD("dmenuumount") },
 	{ MODKEY,			XK_F11,	   spawn,	   SHCMD("xbacklight -dec 2") },
