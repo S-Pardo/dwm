@@ -115,7 +115,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      setgaps,        {.i = 0  } },
 	{ ShiftMask,			XK_Print,  spawn,	   SHCMD("maimpick") },
 	{ MODKEY,			XK_Insert, spawn,          SHCMD("notify-send \"📋 Clipboard contents:\" \"$(xclip -o -selection clipboard)\"") },
 	{ MODKEY,			XK_F1,	   spawn,	   SHCMD("groff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -") },
