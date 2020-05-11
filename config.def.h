@@ -27,13 +27,17 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "KeePass2", NULL,	  NULL,	      1 <<8,	    1,           -1 },
-	{ "Spotify",  NULL,	  NULL,	      1 <<8,	    0,           -1 },
-	{ "firefox",  NULL,	  NULL,	      1 <<1,	    0,           -1 },
-{ "jetbrains-idea-ce",NULL,       "win0",     0,	    1,           -1 },
-	{ "Steam",    NULL,  "Friends List",  0,	    1,           -1 },
+	/* class      instance    title       tags mask     isfloating canfocus   monitor */
+	{ "firefox",  NULL,       NULL,       1 << 1,       0,         1,         -1 },
+	{ "KeePass2", NULL,	  NULL,	      1 <<8,	    1,         1,	  -1 },
+	{ "Spotify",  NULL,	  NULL,	      1 <<8,	    0,         1, 	  -1 },
+	{ "firefox",  NULL,	  NULL,	      1 <<1,	    0,         1,	  -1 },
+{ "jetbrains-idea-ce",NULL,       "win0",     0,	    1,         1, 	  -1 },
+	{ "Steam",    NULL,  "Friends List",  0,	    1,         1,	  -1 },
+	{ "trayer",   NULL,       NULL,       0,            0,         0,         -1 },
 };
+
+static const char systray_app_class[] = "trayer";
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
