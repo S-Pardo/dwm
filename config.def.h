@@ -32,6 +32,7 @@ static const Rule rules[] = {
 	{ "Spotify",  NULL,	  NULL,	      1 <<8,	    0,           -1 },
 	{ "firefox",  NULL,	  NULL,	      1 <<1,	    0,           -1 },
 { "jetbrains-idea-ce",NULL,       "win0",     0,	    1,           -1 },
+{ "Brave-browser",    NULL,	  NULL,	      1 <<1,	    0,           -1 },
 	{ "Steam",    NULL,  "Friends List",  0,	    1,           -1 },
 };
 
@@ -77,7 +78,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_o,      incnmaster,     {.i = -1 } },
 	{ MODKEY,			XK_a,	   spawn,	   SHCMD("$TERMINAL -e pulsemixer ; pkill -RTMIN+10 dwmblocks") },
-	{ MODKEY,			XK_s,	   spawn,	   SHCMD("dmenu_search") },
+	{ MODKEY,			XK_s,	   spawn,	   SHCMD("dmenu_websearch") },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
