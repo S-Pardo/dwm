@@ -31,7 +31,8 @@ static const Rule rules[] = {
 	{ "KeePass2", NULL,	  NULL,	      1 <<8,	    1,           -1 },
 	{ "Spotify",  NULL,	  NULL,	      1 <<8,	    0,           -1 },
 	{ "firefox",  NULL,	  NULL,	      1 <<1,	    0,           -1 },
-{ "jetbrains-idea-ce",NULL,       "win0",     0,	    1,           -1 },
+{ "jetbrains-idea",   NULL,	  NULL,	      0,	    1,           -1 },
+{ "jetbrains-toolbox",NULL,	  NULL,       0,	    1,           -1 },
 { "Brave-browser",    NULL,	  NULL,	      1 <<1,	    0,           -1 },
 	{ "Steam",    NULL,  "Friends List",  0,	    1,           -1 },
 };
